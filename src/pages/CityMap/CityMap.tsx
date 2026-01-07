@@ -1,6 +1,10 @@
 import PlayerHeader from "../../widgets/PlayerHeader/PlayerHeader";
 
-export default function CityMap() {
+type CityMapProps = {
+  onEnterBarracks: () => void;
+};
+
+export default function CityMap({ onEnterBarracks }: CityMapProps) {
   return (
     <div
       style={{
@@ -20,9 +24,26 @@ export default function CityMap() {
       <Location title="БАНЯ" top="30%" right="10%" />
       <Location title="РЫНОК" bottom="26%" right="20%" />
       <Location title="ГИЛЬДИЯ" bottom="30%" left="14%" />
+
+      {/* 👇 КАЗАРМА — ПЕРЕХОД */}
+      <Location
+        title="КАЗАРМА"
+        top="24%"
+        left="4%"
+        onClick={onEnterBarracks}
+      />
     </div>
   );
 }
+
+type LocationProps = {
+  title: string;
+  top?: string;
+  left?: string;
+  right?: string;
+  bottom?: string;
+  onClick?: () => void;
+};
 
 function Location({
   title,
@@ -30,15 +51,11 @@ function Location({
   left,
   right,
   bottom,
-}: {
-  title: string;
-  top?: string;
-  left?: string;
-  right?: string;
-  bottom?: string;
-}) {
+  onClick,
+}: LocationProps) {
   return (
     <div
+      onClick={onClick}
       style={{
         position: "absolute",
         top,
@@ -52,8 +69,9 @@ function Location({
         fontWeight: 700,
         borderRadius: 6,
         boxShadow: "0 4px 12px rgba(0,0,0,.45)",
-        cursor: "pointer",
+        cursor: onClick ? "pointer" : "default",
         border: "1px solid #8b6b3f",
+        userSelect: "none",
       }}
     >
       {title}

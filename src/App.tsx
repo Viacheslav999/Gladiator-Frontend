@@ -4,9 +4,16 @@ import Coliseum from "./pages/Coliseum/Coliseum";
 import Exchange from "./pages/Exchange/Exchange";
 import Inventory from "./pages/Inventory/Inventory";
 import Settings from "./pages/Settings/Settings";
+import Barracks from "./pages/Barracks/Barracks"; // 👈 ДОБАВЛЕНО
 import BottomNav from "./widgets/BottomNav/BottomNav";
 
-type TabKey = "city" | "coliseum" | "exchange" | "inventory" | "settings";
+type TabKey =
+  | "city"
+  | "coliseum"
+  | "exchange"
+  | "inventory"
+  | "settings"
+  | "barracks"; // 👈 ДОБАВЛЕНО
 
 export default function App() {
   const [progress, setProgress] = useState(0);
@@ -29,21 +36,37 @@ export default function App() {
   const Screen = useMemo(() => {
     switch (tab) {
       case "city":
-        return <CityMap />;
+        return (
+          <CityMap
+            onEnterBarracks={() => setTab("barracks")} // 👈 ВАЖНО
+          />
+        );
+
+      case "barracks":
+        return <Barracks />;
+
       case "coliseum":
         return <Coliseum />;
+
       case "exchange":
         return <Exchange />;
+
       case "inventory":
         return <Inventory />;
+
       case "settings":
         return <Settings />;
+
       default:
-        return <CityMap />;
+        return (
+          <CityMap
+            onEnterBarracks={() => setTab("barracks")}
+          />
+        );
     }
   }, [tab]);
 
-  // ⬇️ LOADING SCREEN — ЛОГО НА ВЕСЬ ЭКРАН
+  // ⬇️ LOADING SCREEN — ТОЛЬКО ПРИ СТАРТЕ
   if (progress < 100) {
     return (
       <div
@@ -57,7 +80,6 @@ export default function App() {
           position: "relative",
         }}
       >
-        {/* затемнение */}
         <div
           style={{
             position: "absolute",

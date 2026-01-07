@@ -1,4 +1,4 @@
-type TabKey = "city" | "coliseum" | "exchange" | "inventory" | "settings";
+type TabKey = "city" | "coliseum" | "exchange" | "inventory" | "settings" | "barracks";
 
 export default function BottomNav({
   active,
