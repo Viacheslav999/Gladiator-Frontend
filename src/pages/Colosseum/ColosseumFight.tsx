@@ -12,25 +12,30 @@ export default function ColosseumFight({ fighters, onExit }: Props) {
   const arenaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!arenaRef.current || fighters.length < 2) return;
+    const el = arenaRef.current;
+    if (!el || fighters.length < 2) return;
 
-    const arena = createArena(arenaRef.current, fighters);
+    let arena: { destroy?: () => void } | null = null;
+    let cancelled = false;
+
+    (async () => {
+      await new Promise((r) => requestAnimationFrame(r));
+      if (cancelled || !arenaRef.current) return;
+
+      arena = await createArena(arenaRef.current, fighters, onExit);
+    })();
 
     return () => {
+      cancelled = true;
       arena?.destroy?.();
+      arena = null;
     };
-  }, [fighters]);
+  }, [fighters, onExit]);
 
   return (
     <div className={styles.scene}>
-      <div className={styles.topBar}>
-        <div className={styles.status}>Бой начинается!</div>
-        <button className={styles.exit} onClick={onExit}>
-          ← Назад
-        </button>
-      </div>
-
-      {/* ВАЖНО: этот div должен иметь размеры */}
+      {/* убрали “Бой начинается!” */}
+      <div className={styles.topBar} />
       <div ref={arenaRef} className={styles.arena} />
     </div>
   );
