@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import CityMap from "./pages/CityMap/CityMap";
-import Coliseum from "./pages/Coliseum/Coliseum";
+import Colosseum from "./pages/Colosseum";
 import Exchange from "./pages/Exchange/Exchange";
 import Inventory from "./pages/Inventory/Inventory";
 import Settings from "./pages/Settings/Settings";
-import Barracks from "./pages/Barracks/Barracks"; // 👈 ДОБАВЛЕНО
+import Barracks from "./pages/Barracks/Barracks";
 import BottomNav from "./widgets/BottomNav/BottomNav";
 
 type TabKey =
@@ -13,7 +13,7 @@ type TabKey =
   | "exchange"
   | "inventory"
   | "settings"
-  | "barracks"; // 👈 ДОБАВЛЕНО
+  | "barracks";
 
 export default function App() {
   const [progress, setProgress] = useState(0);
@@ -38,7 +38,8 @@ export default function App() {
       case "city":
         return (
           <CityMap
-            onEnterBarracks={() => setTab("barracks")} // 👈 ВАЖНО
+            onEnterBarracks={() => setTab("barracks")}
+            onEnterColiseum={() => setTab("coliseum")} // ✅ ДОБАВИЛИ
           />
         );
 
@@ -46,7 +47,7 @@ export default function App() {
         return <Barracks />;
 
       case "coliseum":
-        return <Coliseum />;
+        return <Colosseum />;
 
       case "exchange":
         return <Exchange />;
@@ -61,6 +62,7 @@ export default function App() {
         return (
           <CityMap
             onEnterBarracks={() => setTab("barracks")}
+            onEnterColiseum={() => setTab("coliseum")} // ✅ ДОБАВИЛИ
           />
         );
     }
