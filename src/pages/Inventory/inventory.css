@@ -1,0 +1,379 @@
+/* ===================== фон и базовый слой ===================== */
+
+.armory-wrap {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  padding: 96px 16px 96px;
+  color: #fff;
+}
+
+/* Фон отдельным слоем, чтобы можно было сделать фильтр */
+.armory-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/map/inventory-armory.png");
+  background-size: cover;
+  background-position: center;
+  filter: brightness(1.05) contrast(1.05) saturate(1.1);
+  transform: scale(1.02);
+  z-index: 0;
+}
+
+/* Затемнение НЕ убивает фон, а аккуратно делает читаемость */
+.armory-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.75));
+  z-index: 1;
+}
+
+.armory-wrap > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===================== огни факелов ===================== */
+
+@keyframes torchFlicker {
+  0%   { opacity: .55; transform: translateY(0); }
+  40%  { opacity: .85; transform: translateY(-4px); }
+  70%  { opacity: 1;   transform: translateY(-7px); }
+  100% { opacity: .6;  transform: translateY(0); }
+}
+
+.fireGlow {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.fireGlowLeft {
+  left: -130px;
+  top: 18%;
+  background: radial-gradient(circle, rgba(255,150,60,.55), transparent 70%);
+  animation: torchFlicker 3.5s infinite;
+}
+
+.fireGlowRight {
+  right: -130px;
+  top: 23%;
+  background: radial-gradient(circle, rgba(255,120,40,.45), transparent 70%);
+  animation: torchFlicker 4s infinite;
+}
+
+/* ===================== шапка ===================== */
+
+.armory-header {
+  position: absolute;
+  top: 86px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.armory-title {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.armory-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.armory-craftBtn {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  color: #fff;
+}
+
+/* ===================== табы ===================== */
+
+.armory-tabs {
+  margin-top: 64px;
+  display: flex;
+  gap: 8px;
+}
+
+.tabBtn {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: #fff;
+  font-size: 13px;
+}
+
+.tabBtnActive {
+  background: rgba(255,255,255,.16);
+  border-color: rgba(240,210,122,.35);
+}
+
+/* ===================== контент ===================== */
+
+.armory-content {
+  margin-top: 16px;
+  height: calc(100% - 120px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* GRID */
+.armory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  overflow-y: auto;
+  padding-right: 4px;
+  max-height: 68vh;
+}
+
+.armory-grid::-webkit-scrollbar { width: 6px; }
+.armory-grid::-webkit-scrollbar-thumb {
+  background: rgba(240,210,122,.35);
+  border-radius: 6px;
+}
+
+/* ===================== карточки предметов ===================== */
+
+.itemCard {
+  position: relative;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.42);
+  border: 1px solid rgba(255,255,255,.12);
+  text-align: left;
+  cursor: pointer;
+  transition: transform .18s ease, background .18s ease;
+}
+
+.itemCard:hover {
+  transform: scale(1.03);
+  background: rgba(0,0,0,.52);
+}
+
+.itemIcon {
+  font-size: 34px;
+  margin-top: 8px;
+}
+
+.itemName {
+  margin-top: 8px;
+  font-weight: 800;
+  font-size: 13px;
+  opacity: 0.95;
+  line-height: 1.1;
+}
+
+.rarityPill {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.levelBadge {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+.qtyBadge {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+/* рамки по редкости */
+.rarity-common { border-color: rgba(255,255,255,.14); }
+.rarity-rare { border-color: rgba(120,190,255,.55); }
+.rarity-epic { border-color: rgba(200,120,255,.55); }
+.rarity-legendary {
+  border-color: rgba(255,210,110,.75);
+  box-shadow: 0 0 18px rgba(255,210,110,.22);
+}
+
+/* ===================== правая панель ===================== */
+
+.armory-panel {
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.5);
+  border: 1px solid rgba(255,255,255,.12);
+  min-height: 220px;
+}
+
+.panelPlaceholder {
+  opacity: 0.8;
+}
+
+.panelTitle {
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.panelMeta {
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.panelText {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.9;
+  line-height: 1.35;
+}
+
+.panelStats {
+  margin-top: 12px;
+  font-size: 13px;
+  opacity: 0.95;
+  display: grid;
+  gap: 6px;
+}
+
+.panelHint {
+  margin-top: 12px;
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* ===================== MODAL ===================== */
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 18px;
+}
+
+@keyframes popIn {
+  from { transform: scale(.88); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modalCard {
+  width: min(520px, 92vw);
+  border-radius: 18px;
+  background: rgba(10,10,10,.95);
+  border: 1px solid rgba(255,255,255,.12);
+  padding: 16px;
+  animation: popIn .18s ease-out;
+  position: relative;
+  box-shadow: 0 20px 70px rgba(0,0,0,.6);
+}
+
+.modalClose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  cursor: pointer;
+}
+
+.modalTop {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.modalIcon {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.modalTitleBlock {
+  flex: 1;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.modalMeta {
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.78;
+}
+
+.modalDesc {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.92;
+}
+
+.modalStats {
+  margin-top: 12px;
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.modalQty {
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.modalAction {
+  margin-top: 14px;
+  height: 44px;
+  width: 100%;
+  border-radius: 14px;
+  border: none;
+  font-weight: 800;
+  color: #000;
+  background: linear-gradient(180deg, #f7dc8a, #cfa43c);
+  box-shadow: 0 8px 22px rgba(207,164,60,.25);
+  cursor: pointer;
+}
+
+/* ===================== адаптив под приложение ===================== */
+
+@media (max-width: 900px) {
+  .armory-content {
+    grid-template-columns: 1fr;
+  }
+
+  .armory-grid {
+    max-height: 44vh;
+  }
+}

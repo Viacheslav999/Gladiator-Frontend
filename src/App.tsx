@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import CityMap from "./pages/CityMap/CityMap";
 import Colosseum from "./pages/Colosseum";
-import Exchange from "./pages/Exchange/Exchange";
+import ExchangeArena from "./pages/Exchange/ExchangeArena";
 import Inventory from "./pages/Inventory/Inventory";
 import Settings from "./pages/Settings/Settings";
 import Barracks from "./pages/Barracks/Barracks";
@@ -39,7 +39,7 @@ export default function App() {
         return (
           <CityMap
             onEnterBarracks={() => setTab("barracks")}
-            onEnterColiseum={() => setTab("coliseum")} // ✅ ДОБАВИЛИ
+            onEnterColiseum={() => setTab("coliseum")}
           />
         );
 
@@ -50,7 +50,7 @@ export default function App() {
         return <Colosseum />;
 
       case "exchange":
-        return <Exchange />;
+        return <ExchangeArena />;
 
       case "inventory":
         return <Inventory />;
@@ -62,13 +62,13 @@ export default function App() {
         return (
           <CityMap
             onEnterBarracks={() => setTab("barracks")}
-            onEnterColiseum={() => setTab("coliseum")} // ✅ ДОБАВИЛИ
+            onEnterColiseum={() => setTab("coliseum")}
           />
         );
     }
   }, [tab]);
 
-  // ⬇️ LOADING SCREEN — ТОЛЬКО ПРИ СТАРТЕ
+  // LOADING SCREEN
   if (progress < 100) {
     return (
       <div
@@ -130,7 +130,7 @@ export default function App() {
     );
   }
 
-  // ⬇️ GAME SHELL
+  // GAME SHELL
   return (
     <div
       style={{

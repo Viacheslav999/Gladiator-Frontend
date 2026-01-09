@@ -1,0 +1,78 @@
+.settings-arena {
+  min-height: 100vh;
+  padding: 14px;
+
+  background:
+    linear-gradient(
+      rgba(0, 0, 0, 0.65),
+      rgba(0, 0, 0, 0.85)
+    ),
+    url("/arena/setting.png") center / cover no-repeat;
+
+  color: #f5e6b0;
+}
+
+
+.settings-header {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.settings-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.settings-tabs button {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 12px;
+  background: #111;
+  color: #aaa;
+  border: 1px solid #333;
+}
+
+.settings-tabs button.active {
+  background: linear-gradient(180deg, #f0d27a, #b48a2c);
+  color: #000;
+  font-weight: 600;
+}
+
+.settings-panel {
+  background: rgba(10,10,10,0.8);
+  border: 1px solid rgba(240,210,122,0.25);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.settings-panel h3 {
+  margin: 0 0 12px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.setting-row select,
+.setting-row input[type="range"] {
+  width: 140px;
+}
+
+.settings-info {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #ddd;
+}
+
+.settings-placeholder {
+  text-align: center;
+  color: #888;
+  font-size: 13px;
+}

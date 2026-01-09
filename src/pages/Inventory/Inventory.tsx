@@ -1,29 +1,29 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
+import "./inventory.css";
 
 /* ===================== TYPES ===================== */
 
 type TabKey = "weapons" | "armor" | "fragments" | "materials";
 type Rarity = "common" | "rare" | "epic" | "legendary";
 
+type Stats = {
+  atk?: number;
+  def?: number;
+  hp?: number;
+  crit?: number;
+};
+
 type Item = {
   id: string;
   name: string;
   type: TabKey;
   rarity: Rarity;
-  qty?: number;
+  icon: string;
+  level?: number;     // для оружия/брони
+  qty?: number;       // для материалов/осколков
   desc?: string;
+  stats?: Stats;
 };
-
-/* ===================== FIRE ANIMATION ===================== */
-
-const torchKeyframes = `
-@keyframes torchFlicker {
-  0%   { opacity: .55; transform: translateY(0); }
-  40%  { opacity: .85; transform: translateY(-4px); }
-  70%  { opacity: 1;   transform: translateY(-7px); }
-  100% { opacity: .6;  transform: translateY(0); }
-}
-`;
 
 /* ===================== COMPONENT ===================== */
 
@@ -31,54 +31,90 @@ export default function Inventory() {
   const [tab, setTab] = useState<TabKey>("weapons");
   const [selected, setSelected] = useState<Item | null>(null);
 
-  useEffect(() => {
-    const style = document.createElement("style");
-    style.innerHTML = torchKeyframes;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
-
   const items: Item[] = useMemo(
     () => [
+      // WEAPONS
       {
         id: "w1",
-        name: "Rusty Sword",
+        name: "Ржавый меч",
         type: "weapons",
         rarity: "common",
-        desc: "Basic weapon for beginners. Weak but reliable.",
+        icon: "🗡️",
+        level: 1,
+        desc: "Базовое оружие новичка. Дешёвое и надёжное.",
+        stats: { atk: 8, crit: 1 },
       },
       {
         id: "w2",
-        name: "Training Spear",
+        name: "Копьё тренировок",
         type: "weapons",
-        rarity: "common",
-        desc: "Used for early fights and training.",
+        rarity: "rare",
+        icon: "🔱",
+        level: 2,
+        desc: "Удобно держать дистанцию. Хорошо в ранних боях.",
+        stats: { atk: 14, crit: 2 },
       },
+
+      // ARMOR
       {
         id: "a1",
-        name: "Leather Cuirass",
+        name: "Кожаный панцирь",
         type: "armor",
         rarity: "common",
-        desc: "Light armor. Poor protection, better than nothing.",
+        icon: "🛡️",
+        level: 1,
+        desc: "Лёгкая броня. Слабо защищает, но лучше чем ничего.",
+        stats: { def: 6, hp: 10 },
       },
+      {
+        id: "a2",
+        name: "Доспех Арены",
+        type: "armor",
+        rarity: "epic",
+        icon: "🥋",
+        level: 3,
+        desc: "Броня ветерана. Усилена вставками и закалкой.",
+        stats: { def: 22, hp: 40 },
+      },
+
+      // FRAGMENTS
       {
         id: "f1",
-        name: "Blade Fragments",
+        name: "Осколки клинка",
         type: "fragments",
         rarity: "rare",
+        icon: "🧩",
         qty: 12,
-        desc: "Collect 30 to reforge a rare blade.",
+        desc: "Собери 30 — можно перековать редкий клинок.",
       },
       {
+        id: "f2",
+        name: "Осколки брони",
+        type: "fragments",
+        rarity: "common",
+        icon: "🧱",
+        qty: 41,
+        desc: "Материал для усиления брони и апгрейдов.",
+      },
+
+      // MATERIALS
+      {
         id: "m1",
-        name: "Iron Ingots",
+        name: "Железные слитки",
         type: "materials",
         rarity: "common",
+        icon: "🪨",
         qty: 26,
-        desc: "Base material for weapons and armor.",
+        desc: "База для крафта и улучшений оружия/брони.",
+      },
+      {
+        id: "m2",
+        name: "Закалённая сталь",
+        type: "materials",
+        rarity: "legendary",
+        icon: "⚙️",
+        qty: 2,
+        desc: "Редкий материал для топовых апгрейдов.",
       },
     ],
     []
@@ -89,67 +125,147 @@ export default function Inventory() {
     [items, tab]
   );
 
+  const selectedTypeLabel = useMemo(() => {
+    if (!selected) return "";
+    if (selected.type === "weapons") return "Оружие";
+    if (selected.type === "armor") return "Доспехи";
+    if (selected.type === "fragments") return "Осколки";
+    return "Материалы";
+  }, [selected]);
+
   return (
-    <div style={wrap}>
+    <div className="armory-wrap">
       {/* FIRE LIGHT EFFECT */}
-      <div style={fireGlowLeft} />
-      <div style={fireGlowRight} />
+      <div className="fireGlow fireGlowLeft" />
+      <div className="fireGlow fireGlowRight" />
 
       {/* HEADER */}
-      <div style={header}>
+      <div className="armory-header">
         <div>
-          <div style={title}>ARMORY</div>
-          <div style={subtitle}>
-            Weapons • Armor • Fragments • Materials
+          <div className="armory-title">СКЛАД</div>
+          <div className="armory-subtitle">
+            Оружие • Доспехи • Осколки • Материалы
           </div>
         </div>
 
-        <button style={craftBtn} disabled>
-          Forge (soon)
+        <button className="armory-craftBtn" disabled>
+          Кузня (скоро)
         </button>
       </div>
 
       {/* TABS */}
-      <div style={tabsRow}>
-        <Tab label="Weapons" active={tab === "weapons"} onClick={() => setTab("weapons")} />
-        <Tab label="Armor" active={tab === "armor"} onClick={() => setTab("armor")} />
-        <Tab label="Fragments" active={tab === "fragments"} onClick={() => setTab("fragments")} />
-        <Tab label="Materials" active={tab === "materials"} onClick={() => setTab("materials")} />
+      <div className="armory-tabs">
+        <Tab label="Оружие" active={tab === "weapons"} onClick={() => setTab("weapons")} />
+        <Tab label="Доспехи" active={tab === "armor"} onClick={() => setTab("armor")} />
+        <Tab label="Осколки" active={tab === "fragments"} onClick={() => setTab("fragments")} />
+        <Tab label="Материалы" active={tab === "materials"} onClick={() => setTab("materials")} />
       </div>
 
       {/* CONTENT */}
-      <div style={content}>
-        <div style={grid}>
+      <div className="armory-content">
+        {/* GRID */}
+        <div className="armory-grid">
           {filtered.map((item) => (
             <button
               key={item.id}
               onClick={() => setSelected(item)}
-              style={{
-                ...itemCard,
-                borderColor: rarityBorder(item.rarity),
-              }}
+              className={`itemCard rarity-${item.rarity}`}
+              type="button"
             >
-              <div style={rarityPill}>{item.rarity.toUpperCase()}</div>
-              <div style={itemName}>{item.name}</div>
-              {item.qty && <div style={qty}>×{item.qty}</div>}
+              {/* TOP LEFT */}
+              <div className="rarityPill">{rarityLabel(item.rarity)}</div>
+
+              {/* TOP RIGHT */}
+              {item.level != null && <div className="levelBadge">+{item.level}</div>}
+
+              {/* ICON */}
+              <div className="itemIcon">{item.icon}</div>
+
+              {/* NAME */}
+              <div className="itemName">{item.name}</div>
+
+              {/* BOTTOM RIGHT */}
+              {item.qty != null && <div className="qtyBadge">×{item.qty}</div>}
             </button>
           ))}
         </div>
 
-        {/* INFO PANEL */}
-        <div style={panel}>
+        {/* INFO PANEL (как у тебя было справа) */}
+        <div className="armory-panel">
           {!selected ? (
-            <div style={{ opacity: 0.8 }}>
-              Select an item to see details.
-            </div>
+            <div className="panelPlaceholder">Выбери предмет, чтобы увидеть описание.</div>
           ) : (
             <>
-              <div style={panelTitle}>{selected.name}</div>
-              <div style={panelText}>{selected.desc}</div>
+              <div className="panelTitle">{selected.name}</div>
+              <div className="panelMeta">
+                {selectedTypeLabel} • {rarityLabel(selected.rarity)}
+              </div>
+              <div className="panelText">{selected.desc || "Нет описания."}</div>
+
+              {selected.stats && (
+                <div className="panelStats">
+                  {selected.stats.atk != null && <div>⚔️ Атака: <b>{selected.stats.atk}</b></div>}
+                  {selected.stats.def != null && <div>🛡️ Защита: <b>{selected.stats.def}</b></div>}
+                  {selected.stats.hp != null && <div>❤️ HP: <b>{selected.stats.hp}</b></div>}
+                  {selected.stats.crit != null && <div>🎯 Крит: <b>{selected.stats.crit}%</b></div>}
+                </div>
+              )}
+
+              <div className="panelHint">
+                Нажми на предмет ещё раз — откроется карточка по центру.
+              </div>
             </>
           )}
         </div>
       </div>
+
+      {/* ===================== MODAL (по центру) ===================== */}
+      {selected && (
+        <div className="modalBackdrop" onMouseDown={() => setSelected(null)}>
+          <div
+            className={`modalCard rarity-${selected.rarity}`}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <button className="modalClose" onClick={() => setSelected(null)} type="button">
+              ✕
+            </button>
+
+            <div className="modalTop">
+              <div className="modalIcon">{selected.icon}</div>
+              <div className="modalTitleBlock">
+                <div className="modalTitle">{selected.name}</div>
+                <div className="modalMeta">
+                  {selectedTypeLabel} • {rarityLabel(selected.rarity)}
+                  {selected.level != null ? ` • уровень +${selected.level}` : ""}
+                </div>
+              </div>
+            </div>
+
+            <div className="modalDesc">
+              {selected.desc || "Нет описания."}
+            </div>
+
+            {selected.stats && (
+              <div className="modalStats">
+                {selected.stats.atk != null && <div>⚔️ Атака: <b>{selected.stats.atk}</b></div>}
+                {selected.stats.def != null && <div>🛡️ Защита: <b>{selected.stats.def}</b></div>}
+                {selected.stats.hp != null && <div>❤️ HP: <b>{selected.stats.hp}</b></div>}
+                {selected.stats.crit != null && <div>🎯 Крит: <b>{selected.stats.crit}%</b></div>}
+              </div>
+            )}
+
+            {selected.qty != null && (
+              <div className="modalQty">В наличии: <b>×{selected.qty}</b></div>
+            )}
+
+            {(selected.type === "weapons" || selected.type === "armor") && (
+              <button className="modalAction" type="button">
+                ⬆️ Улучшить (скоро)
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -168,162 +284,17 @@ function Tab({
   return (
     <button
       onClick={onClick}
-      style={{
-        ...tabBtn,
-        ...(active ? tabBtnActive : {}),
-      }}
+      className={`tabBtn ${active ? "tabBtnActive" : ""}`}
+      type="button"
     >
       {label}
     </button>
   );
 }
 
-/* ===================== STYLES ===================== */
-
-const wrap: React.CSSProperties = {
-  width: "100%",
-  height: "100%",
-  position: "relative",
-  overflow: "hidden",
-  padding: "96px 16px 96px",
-  color: "#fff",
-  backgroundImage: `
-    linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.85)),
-    url(/inventory-armory.png)
-  `,
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-};
-
-const fireGlowLeft: React.CSSProperties = {
-  position: "absolute",
-  left: "-120px",
-  top: "20%",
-  width: 300,
-  height: 300,
-  background: "radial-gradient(circle, rgba(255,140,60,.45), transparent 70%)",
-  animation: "torchFlicker 3.5s infinite",
-  pointerEvents: "none",
-};
-
-const fireGlowRight: React.CSSProperties = {
-  position: "absolute",
-  right: "-120px",
-  top: "25%",
-  width: 300,
-  height: 300,
-  background: "radial-gradient(circle, rgba(255,120,40,.4), transparent 70%)",
-  animation: "torchFlicker 4s infinite",
-  pointerEvents: "none",
-};
-
-const header: React.CSSProperties = {
-  position: "absolute",
-  top: 86,
-  left: 16,
-  right: 16,
-  display: "flex",
-  justifyContent: "space-between",
-};
-
-const title: React.CSSProperties = {
-  fontSize: 22,
-  fontWeight: 900,
-  letterSpacing: 2,
-};
-
-const subtitle: React.CSSProperties = {
-  fontSize: 12,
-  opacity: 0.75,
-};
-
-const craftBtn: React.CSSProperties = {
-  height: 34,
-  padding: "0 14px",
-  borderRadius: 10,
-  background: "rgba(255,255,255,.08)",
-  border: "1px solid rgba(255,255,255,.15)",
-  color: "#fff",
-};
-
-const tabsRow: React.CSSProperties = {
-  marginTop: 64,
-  display: "flex",
-  gap: 8,
-};
-
-const tabBtn: React.CSSProperties = {
-  padding: "8px 14px",
-  borderRadius: 10,
-  background: "rgba(255,255,255,.06)",
-  border: "1px solid rgba(255,255,255,.12)",
-  color: "#fff",
-};
-
-const tabBtnActive: React.CSSProperties = {
-  background: "rgba(255,255,255,.15)",
-};
-
-const content: React.CSSProperties = {
-  marginTop: 16,
-  height: "calc(100% - 120px)",
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: 12,
-};
-
-const grid: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(2, 1fr)",
-  gap: 12,
-  overflowY: "auto",
-};
-
-const itemCard: React.CSSProperties = {
-  padding: 14,
-  borderRadius: 14,
-  background: "rgba(0,0,0,.45)",
-  border: "1px solid rgba(255,255,255,.12)",
-  textAlign: "left",
-};
-
-const rarityPill: React.CSSProperties = {
-  fontSize: 10,
-  opacity: 0.7,
-};
-
-const itemName: React.CSSProperties = {
-  marginTop: 6,
-  fontWeight: 700,
-};
-
-const qty: React.CSSProperties = {
-  marginTop: 4,
-  fontSize: 12,
-  opacity: 0.8,
-};
-
-const panel: React.CSSProperties = {
-  padding: 14,
-  borderRadius: 16,
-  background: "rgba(0,0,0,.5)",
-  border: "1px solid rgba(255,255,255,.12)",
-};
-
-const panelTitle: React.CSSProperties = {
-  fontWeight: 800,
-  fontSize: 16,
-};
-
-const panelText: React.CSSProperties = {
-  marginTop: 8,
-  fontSize: 13,
-  opacity: 0.85,
-};
-
-function rarityBorder(r: Rarity) {
-  if (r === "rare") return "rgba(120,190,255,.6)";
-  if (r === "epic") return "rgba(200,120,255,.6)";
-  if (r === "legendary") return "rgba(255,210,110,.7)";
-  return "rgba(255,255,255,.12)";
+function rarityLabel(r: Rarity) {
+  if (r === "rare") return "РЕДКИЙ";
+  if (r === "epic") return "ЭПИЧЕСКИЙ";
+  if (r === "legendary") return "ЛЕГЕНДАРНЫЙ";
+  return "ОБЫЧНЫЙ";
 }
