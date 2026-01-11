@@ -2,12 +2,14 @@ import PlayerHeader from "../../widgets/PlayerHeader/PlayerHeader";
 
 type CityMapProps = {
   onEnterBarracks: () => void;
-  onEnterColiseum: () => void; // ✅ ДОБАВИЛИ
+  onEnterColiseum: () => void;
+  onEnterMarket: () => void;
 };
 
 export default function CityMap({
   onEnterBarracks,
   onEnterColiseum,
+  onEnterMarket,
 }: CityMapProps) {
   return (
     <div
@@ -28,11 +30,18 @@ export default function CityMap({
         title="КОЛИЗЕЙ"
         top="18%"
         left="42%"
-        onClick={onEnterColiseum} // ✅ ТЕПЕРЬ ВСЁ СОВПАДАЕТ
+        onClick={onEnterColiseum}
       />
 
       <Location title="БАНЯ" top="30%" right="10%" />
-      <Location title="РЫНОК" bottom="26%" right="20%" />
+
+      <Location
+        title="РЫНОК"
+        bottom="26%"
+        right="20%"
+        onClick={onEnterMarket}
+      />
+
       <Location title="ГИЛЬДИЯ" bottom="30%" left="14%" />
 
       <Location
@@ -71,6 +80,11 @@ function Location({
         left,
         right,
         bottom,
+
+        /* 🔥 КЛЮЧЕВОЙ ФИКС */
+        zIndex: 10,
+        pointerEvents: "auto",
+
         background: "linear-gradient(#f5deb3, #d2b48c)",
         color: "#3b2f1c",
         padding: "10px 22px",

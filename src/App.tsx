@@ -6,6 +6,7 @@ import Inventory from "./pages/Inventory/Inventory";
 import Settings from "./pages/Settings/Settings";
 import Barracks from "./pages/Barracks/Barracks";
 import BottomNav from "./widgets/BottomNav/BottomNav";
+import Market from "./pages/Market/Market";
 
 type TabKey =
   | "city"
@@ -13,7 +14,8 @@ type TabKey =
   | "exchange"
   | "inventory"
   | "settings"
-  | "barracks";
+  | "barracks"
+  | "market";
 
 export default function App() {
   const [progress, setProgress] = useState(0);
@@ -40,6 +42,7 @@ export default function App() {
           <CityMap
             onEnterBarracks={() => setTab("barracks")}
             onEnterColiseum={() => setTab("coliseum")}
+            onEnterMarket={() => setTab("market")} // ✅ ВОТ ОНО
           />
         );
 
@@ -58,11 +61,15 @@ export default function App() {
       case "settings":
         return <Settings />;
 
+      case "market":
+        return <Market />;
+
       default:
         return (
           <CityMap
             onEnterBarracks={() => setTab("barracks")}
             onEnterColiseum={() => setTab("coliseum")}
+            onEnterMarket={() => setTab("market")} // ✅ И ТУТ ТОЖЕ
           />
         );
     }
@@ -138,7 +145,6 @@ export default function App() {
         height: "100vh",
         background: "#000",
         position: "relative",
-        overflow: "hidden",
       }}
     >
       <div style={{ width: "100%", height: "100%", position: "relative" }}>

@@ -1,4 +1,13 @@
-type TabKey = "city" | "coliseum" | "exchange" | "inventory" | "settings" | "barracks";
+import React from "react";
+
+type TabKey =
+  | "city"
+  | "coliseum"
+  | "exchange"
+  | "market"     // ✅ ДОБАВЛЕНО
+  | "inventory"
+  | "settings"
+  | "barracks";
 
 export default function BottomNav({
   active,
@@ -11,6 +20,7 @@ export default function BottomNav({
     { key: "city", label: "Город", icon: "🏛️" },
     { key: "coliseum", label: "Колизей", icon: "⚔️" },
     { key: "exchange", label: "Обмен", icon: "💱" },
+    { key: "market", label: "Рынок", icon: "🛒" }, // ✅ КАК ДРУГИЕ
     { key: "inventory", label: "Склад", icon: "🎒" },
     { key: "settings", label: "Настр.", icon: "⚙️" },
   ];
@@ -30,8 +40,12 @@ export default function BottomNav({
                 ...(isActive ? btnActive : null),
               }}
             >
-              <div style={{ fontSize: 20, lineHeight: "20px" }}>{it.icon}</div>
-              <div style={{ fontSize: 11, marginTop: 2 }}>{it.label}</div>
+              <div style={{ fontSize: 20, lineHeight: "20px" }}>
+                {it.icon}
+              </div>
+              <div style={{ fontSize: 11, marginTop: 2 }}>
+                {it.label}
+              </div>
             </button>
           );
         })}
