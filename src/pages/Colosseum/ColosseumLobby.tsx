@@ -14,7 +14,7 @@ export default function ColosseumLobby({ onStartFight }: Props) {
     setSelected((prev) =>
       prev.some((x) => x.id === g.id)
         ? prev.filter((x) => x.id !== g.id)
-        : prev.length < 2
+        : prev.length < 3
         ? [...prev, g]
         : prev
     );
@@ -24,7 +24,7 @@ export default function ColosseumLobby({ onStartFight }: Props) {
     <div className={styles.scene}>
       {/* ВЕРХ */}
       <div className={styles.selectionPanel}>
-        {[0, 1].map((i) => (
+        {[0, 1, 2].map((i) => (
           <div key={i} className={styles.slot}>
             {selected[i] ? (
               <div className={styles.slotFilled}>
@@ -39,10 +39,10 @@ export default function ColosseumLobby({ onStartFight }: Props) {
 
         <button
           className={styles.fightButton}
-          disabled={selected.length < 2}
+          disabled={selected.length < 3}
           onClick={() => onStartFight(selected)}
         >
-          В БОЙ
+          В БОЙ 3×3
         </button>
       </div>
 

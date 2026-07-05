@@ -35,7 +35,7 @@ export const GLADIATORS: Gladiator[] = [
   {
     id: "sextus",
     name: "Секст",
-    image: "/gladiators/sextus.png",
+    image: "/gladiators/first-gladiator/2.png",
     hp: 100,
     attack: 12,
     defense: 5,
@@ -44,7 +44,7 @@ export const GLADIATORS: Gladiator[] = [
   {
     id: "aurelius",
     name: "Аврелий",
-    image: "/gladiators/aurelius.png",
+    image: "/gladiators/first-gladiator/5.png",
     hp: 105,
     attack: 14,
     defense: 4,

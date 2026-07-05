@@ -4,16 +4,17 @@ import { createArena } from "./arena/ArenaScene";
 import type { Gladiator } from "./Colosseum.types";
 
 type Props = {
-  fighters: Gladiator[];
+  playerTeam: Gladiator[];
+  enemyTeam: Gladiator[];
   onExit: () => void;
 };
 
-export default function ColosseumFight({ fighters, onExit }: Props) {
+export default function ColosseumFight({ playerTeam, enemyTeam, onExit }: Props) {
   const arenaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = arenaRef.current;
-    if (!el || fighters.length < 2) return;
+    if (!el || playerTeam.length === 0 || enemyTeam.length === 0) return;
 
     let arena: { destroy?: () => void } | null = null;
     let cancelled = false;
@@ -22,7 +23,7 @@ export default function ColosseumFight({ fighters, onExit }: Props) {
       await new Promise((r) => requestAnimationFrame(r));
       if (cancelled || !arenaRef.current) return;
 
-      arena = await createArena(arenaRef.current, fighters, onExit);
+      arena = await createArena(arenaRef.current, playerTeam, enemyTeam, onExit);
     })();
 
     return () => {
@@ -30,11 +31,10 @@ export default function ColosseumFight({ fighters, onExit }: Props) {
       arena?.destroy?.();
       arena = null;
     };
-  }, [fighters, onExit]);
+  }, [playerTeam, enemyTeam, onExit]);
 
   return (
     <div className={styles.scene}>
-      {/* убрали “Бой начинается!” */}
       <div className={styles.topBar} />
       <div ref={arenaRef} className={styles.arena} />
     </div>
